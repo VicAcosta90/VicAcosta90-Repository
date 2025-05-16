@@ -6,8 +6,8 @@ attempts = 0
 
 while guess != secret_number:
     guess = int(input("What's your guess? "))
-    attempts +=1
-    
+    attempts += 1
+
     if guess < secret_number:
         print("It's higher!")
     elif guess > secret_number:

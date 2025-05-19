@@ -15,3 +15,5 @@ while guess != secret_number:
     else:
         print(f"Congratulations! The number is {secret_number}!")
         print(f"You reached it in {attempts} attempts!")
+
+# pedir mas proyectos a chatGPT

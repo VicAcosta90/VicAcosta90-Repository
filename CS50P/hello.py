@@ -12,7 +12,8 @@ def main():
 
 
 def hello(to="world"):
-    print("Hello,", to)
+    return f"Hello,", {to}
 
 
-main()
+if __name__ == "__main__":
+    main()

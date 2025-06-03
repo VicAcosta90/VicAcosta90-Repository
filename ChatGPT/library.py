@@ -19,6 +19,35 @@ class Book:
 
 class Library:
     def __init__(self):
-        list = []
+        self.books = []
 
-    def add_book(title, author, pages):
+    def add_book(self, title, author, pages):
+        new_book = Book(title, author, pages)
+        self.books.append(new_book)
+
+    def borrow_book(self, title):
+        for book in self.books:
+            if book.title == title:
+                if book.available:
+                    book.available = False
+                    print(f"You have borrowed {book.title}")
+                else:
+                    print("Book is currently borrowed")
+                return
+        print("Book not found")
+
+    def return_book(self, title):
+        for book in self.books:
+            if book.title == title:
+                if book.available == False:
+                    book.available = True
+                    print(f"You have returned {book.title}")
+                else:
+                    print("Book is already returned")
+                return
+        print("Book not found")
+
+    def list_books(self):
+        for book in self.books:
+            status = "Available" if book.available else "Borrowed"
+            print(f"{book.title} by {book.author} ({book.pages} pages) - {status}")

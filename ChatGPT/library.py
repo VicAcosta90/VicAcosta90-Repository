@@ -1,53 +1,59 @@
+import uuid
+
 class Book:
-    def __init__(self, title, author, pages, available=True):
+    def __init__(self, title, author, isbn, available=True):
         self.title = title
         self.author = author
-        self.pages = pages
+        self.isbn = isbn
         self.available = True
 
-    def borrow(self):
-        if self.available:
-            self.available = False
-            print(f"You have borrowed {self.title}")
-        else:
-            print(f"Sorry, {self.title} is not available.")
+    def __str__(self):
+        return f"{self.title} written by {self.author}, with ISBN #{self.isbn}"
+    
+class Member:
+    id_counter = 1
 
-    def return_book(self):
-        self.available = True
-        print(f"You have returned {self.title}")
+    def __init__(self, name, member_id):
+        self.name = name
+        self.member_id = Member.id_counter
+        Member.id_counter += 1
+        self.borrowed_books = []
 
+    def borrow_book(self, book):
+        
 
-class Library:
-    def __init__(self):
-        self.books = []
+Methods:
 
-    def add_book(self, title, author, pages):
-        new_book = Book(title, author, pages)
-        self.books.append(new_book)
+borrow_book(book) → adds book to borrowed list and marks it unavailable
 
-    def borrow_book(self, title):
-        for book in self.books:
-            if book.title == title:
-                if book.available:
-                    book.available = False
-                    print(f"You have borrowed {book.title}")
-                else:
-                    print("Book is currently borrowed")
-                return
-        print("Book not found")
+return_book(book) → removes from borrowed list and marks it available
 
-    def return_book(self, title):
-        for book in self.books:
-            if book.title == title:
-                if book.available == False:
-                    book.available = True
-                    print(f"You have returned {book.title}")
-                else:
-                    print("Book is already returned")
-                return
-        print("Book not found")
+list_books() → prints borrowed books
 
-    def list_books(self):
-        for book in self.books:
-            status = "Available" if book.available else "Borrowed"
-            print(f"{book.title} by {book.author} ({book.pages} pages) - {status}")
+🔹 3. Library
+Attributes:
+
+books (list of all Book)
+
+members (list of all Member)
+
+Methods:
+
+add_book(book)
+
+register_member(member)
+
+find_book_by_title(title) → returns the book object or None
+
+list_available_books()
+
+✅ Bonus Features (optional)
+If you finish the basics, try adding:
+
+Prevent a member from borrowing more than 3 books
+
+Prevent borrowing if book is not available
+
+Prevent returning books the member didn’t borrow
+
+Auto-generate member_id using uuid or a counter

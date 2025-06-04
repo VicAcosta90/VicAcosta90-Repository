@@ -1,10 +1,16 @@
-class Cat:
-    MEOWS = 3
+def meow(n: int) -> str:
+    """
+    Meow n times.
 
-    def meow(self):
-        for _ in range(Cat.MEOWS):
-            print("meow")
+    :param n: Number of times to meow
+    :type n: int
+    :raise TypeError: If n is not an int
+    :return: A string of n meows, one per line
+    :rtype: str
+    """
+    return "meow\n" * n
 
 
-cat = Cat()
-cat.meow()
+number: int = int(input("Number: "))
+meows: str = meow(number)
+print(meows, end="")

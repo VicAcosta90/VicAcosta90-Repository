@@ -62,7 +62,26 @@ void bubble_sort(int array[], int n)
     }
 }
 
-// Recursively sorts the array using Merge Sort
+// Sort an array using the Insertion Sort algorithm. Pass the array and length
+void insertion_sort(int array[], int n)
+{
+    for (int i = 1; i < n; i++) // Start from second element
+    {
+        int key = array[i]; // Key to insert
+        int j = i - 1;      // Start from element before key
+
+        // Shift elements of the sorted section to the right
+        while (j >= 0 && array[j] > key)
+        {
+            array[j + 1] = array[j]; // Move the bigger element right
+            j--;                     // Check the next one to the left
+        }
+
+        array[j + 1] = key; // Insert key into correct spot
+    }
+}
+
+// Recursively sorts the array using Merge Sort. Pass the array, the first index and the last index.
 void merge_sort(int array[], int start, int end)
 {
     // Base case: if the array has one or zero elements, it's already sorted
@@ -145,4 +164,48 @@ void merge(int array[], int start, int mid, int end)
         k++;
         j++;
     }
+}
+
+// Recursively sorts the array by partitioning it around a pivot element,
+// sorting the left and right halves separately.
+void quick_sort(int array[], int start, int end)
+{
+    // Base case, with 0 or 1 element, the array is already sorted
+    if (start >= end)
+    {
+        return;
+    }
+
+    int pivot = partition(array, start, end); // Call partition and get the pivot
+    quick_sort(array, start, pivot - 1);      // Sort left of pivot
+    quick_sort(array, pivot + 1, end);        // Sort right of pivot
+}
+
+// Chooses a pivot (last element) and rearranges the array so that
+// all elements smaller than the pivot come before it, and all larger come after.
+// Returns the index where the pivot finally lands after partitioning.
+int partition(int array[], int start, int end)
+{
+    int pivot = array[end]; // Choose the last element as pivot
+    int i = start - 1;      // Index of the smaller element
+
+    for (int j = start; j < end; j++)
+    {
+        if (array[j] < pivot)
+        {
+            i++;
+            // Swap array[i] and array[j]
+            int temp = array[j];
+            array[j] = array[i];
+            array[i] = temp;
+        }
+    }
+
+    // Place the pivot in its correct sorted position
+    int temp = array[i + 1];
+    array[i + 1] = array[end];
+    array[end] = temp;
+
+    // Return the partition index
+    return i + 1;
 }

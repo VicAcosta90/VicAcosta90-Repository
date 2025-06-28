@@ -1,19 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 // Sorts an array using the Selection Sort algorithm. Pass the array and the length
-void selection_sort(int array[], int n)
+// Best Time Complexity: O(n²) Worst Time: O(n²), Space complexity O(1), Not stable.
+void selection_sort(int array[], int len)
 {
     // Outer loop iterates through each element of the array, except the last one
     for (int i = 0; i < len - 1; i++)
     {
-        // Assume the current index i holds the smallest element
+        // Assume the current index 'i' holds the smallest element
         int min = i;
 
         // Inner loop scans the unsorted part of the array to find the real minimum
         for (int j = i + 1; j < len; j++)
         {
             // If we find a smaller element, update the index of the minimum
-            if (numbers[min] > numbers[j])
+            if (array[j] < array[min])
             {
                 min = j;
             }
@@ -22,25 +24,26 @@ void selection_sort(int array[], int n)
         // If the minimum is not already in position i, swap it with the element at i
         if (min != i)
         {
-            int temp = numbers[i];
-            numbers[i] = numbers[min];
-            numbers[min] = temp;
+            int temp = array[i];
+            array[i] = array[min];
+            array[min] = temp;
         }
     }
 }
 
 // Sorts an array using the Bubble Sort algorithm. Pass the array and the length
-void bubble_sort(int array[], int n)
+// Best Time Complexity: O(n), Worst Time: O(n²), Space Complexity: O(1), Stable.
+void bubble_sort(int array[], int len)
 {
     // Outer loop: each pass ensures the next-largest element "bubbles" to its correct position
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < len - 1; i++)
     {
         // A flag to track whether any swaps occurred during this pass
         bool swapped = false;
 
         // Inner loop: compare adjacent elements and swap if needed
         // The '- i' means we don't need to check the last i elements, as they're already sorted
-        for (int j = 0; j < n - i - 1; j++)
+        for (int j = 0; j < len - i - 1; j++)
         {
             // If the current element is greater than the next, swap them
             if (array[j] > array[j + 1])
@@ -55,7 +58,7 @@ void bubble_sort(int array[], int n)
         }
 
         // Optimization: if no swaps occurred during the inner loop, the array is already sorted
-        if (swapped == false)
+        if (!swapped)
         {
             return;
         }
@@ -63,6 +66,7 @@ void bubble_sort(int array[], int n)
 }
 
 // Sort an array using the Insertion Sort algorithm. Pass the array and length
+// Best Time Complexity: O(n), Worst Time: O(n²), Space complexity O(1), Stable.
 void insertion_sort(int array[], int n)
 {
     for (int i = 1; i < n; i++) // Start from second element
@@ -82,6 +86,7 @@ void insertion_sort(int array[], int n)
 }
 
 // Recursively sorts the array using Merge Sort. Pass the array, the first index and the last index.
+// Best Time Complexity: O(n log n), Worst Time: O(n log n), Space complexity: O(n), Stable.
 void merge_sort(int array[], int start, int end)
 {
     // Base case: if the array has one or zero elements, it's already sorted
@@ -141,11 +146,10 @@ void merge(int array[], int start, int mid, int end)
             i++;
         }
         else
-            (left[i] > right[j])
-            {
-                array[k] = right[j];
-                j++;
-            }
+        {
+            array[k] = right[j];
+            j++;
+        }
         k++;
     }
 
@@ -167,7 +171,10 @@ void merge(int array[], int start, int mid, int end)
 }
 
 // Recursively sorts the array by partitioning it around a pivot element,
-// sorting the left and right halves separately.
+// then independently sorts the subarrays left and right of the pivot.
+// You can choose between different pivot strategies: fixed (end), randomized, median-of-three, or introsort.
+// Best Time Complexity: O(n log n), Worst Time: O(n²) (rare with good pivots),
+// Space complexity: O(log n) due to recursion stack, Not stable.
 void quick_sort(int array[], int start, int end)
 {
     // Base case, with 0 or 1 element, the array is already sorted
@@ -176,9 +183,56 @@ void quick_sort(int array[], int start, int end)
         return;
     }
 
+    // randomized_pivot(array, start, end);         // Sets the random pivot at array[end]
+    // median_of_three(array, start, end);          // Sets the median of start, mid and end as pivot at array[end]
     int pivot = partition(array, start, end); // Call partition and get the pivot
     quick_sort(array, start, pivot - 1);      // Sort left of pivot
     quick_sort(array, pivot + 1, end);        // Sort right of pivot
+}
+
+// Randomizes the pivot selection to reduce the chance of Quick Sort hitting worst-case O(n²)
+// on already sorted or adversarial inputs, improving average-case performance.
+// Call srand(time(NULL)); once at the beginning of your main() to ensure randomization is seeded properly.
+// This ensures a different sequence of random pivots across program executions.
+void randomized_pivot(int array[], int start, int end)
+{
+    // Choose a random pivot index between start and end
+    int random_index = start + rand() % (end - start + 1);
+
+    // Swap the randomly chosen pivot with the element at the end
+    int temp = array[end];
+    array[end] = array[random_index];
+    array[random_index] = temp;
+}
+
+// Improves pivot choice by selecting the median of three elements,
+// often balancing partitions better and reducing worst cases like already sorted or reverse-sorted input.
+void median_of_three(int array[], int start, int end)
+{
+    int a = array[start];
+    int b = array[(start + end) / 2];
+    int c = array[end];
+
+    int median_index;
+
+    // Finds the median of three values
+    if ((a <= b && b <= c) || (c <= b && b <= a))
+    {
+        median_index = (start + end) / 2;
+    }
+    else if ((b <= a && a <= c) || (c <= a && a <= b))
+    {
+        median_index = start;
+    }
+    else
+    {
+        median_index = end;
+    }
+
+    // Moves it to the end of the segment to use as pivot
+    int temp = array[end];
+    array[end] = array[median_index];
+    array[median_index] = temp;
 }
 
 // Chooses a pivot (last element) and rearranges the array so that
@@ -187,7 +241,10 @@ void quick_sort(int array[], int start, int end)
 int partition(int array[], int start, int end)
 {
     int pivot = array[end]; // Choose the last element as pivot
-    int i = start - 1;      // Index of the smaller element
+
+    // i marks the boundary of elements less than the pivot.
+    // Elements <= i are less than pivot; elements > i and < j are greater or equal.
+    int i = start - 1;
 
     for (int j = start; j < end; j++)
     {

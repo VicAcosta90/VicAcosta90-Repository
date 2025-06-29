@@ -266,3 +266,63 @@ int partition(int array[], int start, int end)
     // Return the partition index
     return i + 1;
 }
+
+// An efficient, in-place comparison-based sorting algorithm using a binary heap structure
+// Useful for guaranteed O(n log n) performance without extra memory.
+// Best Time Complexity: O(n log n), Worst Time Complexity: O(n log n), Space Complexity: O(1), Not Stable.
+void heap_sort(int array[], int len)
+{
+    build_max_heap(array, len);
+
+    for (int i = len - 1; i > 0; i--)
+    {
+        // Move current max (root) to the end
+        int temp = array[i];
+        array[i] = array[0];
+        array[0] = temp;
+
+        // Re-heapify the reduced heap (excluding the sorted elements at the end)
+        heapify(array, i, 0);
+    }
+}
+
+// Build a max heap from an unordered array.
+// Starts from the last non-leaf node down to root,
+// calling heapify to ensure subtree satisfies max-heap property.
+void build_max_heap(int array[], int len)
+{
+    for (int i = len / 2 - 1; i >= 0; i--)
+    {
+        heapify(array, len, i);
+    }
+}
+
+// Sift down the index 'i' to it's correct position
+void heapify(int array[], int heap_size, int i)
+{
+    int left = i * 2 + 1;
+    int right = i * 2 + 2;
+    int largest = i;
+
+    // Check if left child index is inside heap and if left child is greater than parent
+    if ((left < heap_size) && (array[left] > array[largest]))
+    {
+        largest = left;
+    }
+
+    // Check if right child index is inside heap and if right child is greater than current largest
+    if ((right < heap_size) && (array[right] > array[largest]))
+    {
+        largest = right;
+    }
+
+    // If largest is not the parent, swap and recurse to maintain max-heap property
+    if (largest != i)
+    {
+        int temp = array[largest];
+        array[largest] = array[i];
+        array[i] = temp;
+
+        heapify(array, heap_size, largest);
+    }
+}

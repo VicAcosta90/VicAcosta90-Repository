@@ -67,9 +67,9 @@ void bubble_sort(int array[], int len)
 
 // Sort an array using the Insertion Sort algorithm. Pass the array and length
 // Best Time Complexity: O(n), Worst Time: O(n²), Space complexity O(1), Stable.
-void insertion_sort(int array[], int n)
+void insertion_sort(int array[], int len)
 {
-    for (int i = 1; i < n; i++) // Start from second element
+    for (int i = 1; i < len; i++) // Start from second element
     {
         int key = array[i]; // Key to insert
         int j = i - 1;      // Start from element before key
@@ -77,7 +77,7 @@ void insertion_sort(int array[], int n)
         // Shift elements of the sorted section to the right
         while (j >= 0 && array[j] > key)
         {
-            array[j + 1] = array[j]; // Move the bigger element right
+            array[j + 1] = array[j]; // Move the bigger element to the right
             j--;                     // Check the next one to the left
         }
 
@@ -325,4 +325,57 @@ void heapify(int array[], int heap_size, int i)
 
         heapify(array, heap_size, largest);
     }
+}
+
+// Introsort: Hybrid sorting algorithm using Quicksort, Heapsort, and Insertion Sort.
+// Best Time Complexity: O(n log n), Worst Time: O(n log n), Space complexity: O(log n), Not Stable.
+void introsort(int array[], int len)
+{
+    int depth_limit = 2 * (int)log2(len); // Max recursion depth before switching to Heapsort. Include <math.h>
+    introsort_util(array, 0, len - 1, depth_limit);
+}
+
+// Recursive utility for introsort that switches strategy based on depth and size
+void introsort_util(int array[], int start, int end, int depth_limit)
+{
+    if (end - start <= 16) // Use Insertion Sort for small subarrays
+    {
+        insertion_sort(array, start, end);
+    }
+    else if (depth_limit == 0) // Use Heapsort if recursion is too deep
+    {
+        heap_sort(array + start, end - start + 1);
+    }
+    else // Quicksort partitioning
+    {
+        int pivot = partition(array, start, end);
+        introsort_util(array, start, pivot - 1, depth_limit - 1);
+        introsort_util(array, pivot + 1, end, depth_limit - 1);
+    }
+}
+
+// Same as previous insertion sort
+void insertion(int array[], int start, int end)
+{
+    for (int i = start + 1; i <= end; i++)
+    {
+        int key = array[i];
+        int j = i - 1;
+        while (j >= start && array[j] > key)
+        {
+            array[j + 1] = array[j];
+            j--;
+        }
+        array[j + 1] = key;
+    }
+}
+
+void heap_sort(int array[], int len)
+{
+    // Reuse previous functions as they are
+}
+
+void partition(int array[], int start, int end)
+{
+    // Reuse previous function as it is
 }
